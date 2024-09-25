@@ -3,10 +3,6 @@ from abc import ABC, abstractmethod
 import math
 
 class Perceptron(ABC):
-    # Instantiate with weights, bias
-    def __init__(self, weights, bias, input_size):
-        self.weights = weights
-        self.bias = bias
 
     # NoArgs constructor
     def __init__(self, input_size):
@@ -44,8 +40,12 @@ class PerceptronHyperbolicTangent(Perceptron):
 
 
 class ANN:
-    pass
+    
+    def __init__(self, input_size) -> None:
+        pass
 
 # Main function
 if __name__ == "__main__":
-    perc = PerceptronLogistic()
+    perc = PerceptronLogistic(weights=[0.2, 0.3, 0.4], bias=4, input_size=3)
+    sigma = perc.output([0.3, 0.5, 0.87])
+    print(perc.activation_function(sigma))
