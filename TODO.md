@@ -4,7 +4,7 @@
 
 - [x] Implement other activation functions (ReLu & Tanh)
 - [x] Implement ANN (layers of perceptrons that feed into each other)
-- [ ] Implement an evaluation metric
+- [x] Implement an evaluation metric
 - [ ] Test ANN on a regression task
 - [ ] Implement PSO Algorithm
 - [ ] Test PSO on a regression task (maybe a simpler task instead/as well as?)

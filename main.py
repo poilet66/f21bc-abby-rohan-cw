@@ -114,6 +114,26 @@ class ANN:
 
 """
 ======================================
+         Evaluation Function
+======================================
+"""
+
+
+def mean_absolute_error(y_true, y_pred):
+    # Ensure both inputs are Numpy arrays
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+
+    # Flatten the arrays to 1D
+    y_true = y_true.flatten()
+    y_pred = y_pred.flatten()
+
+    # Calculate the MAE
+    return np.mean(np.abs(y_true - y_pred))
+
+
+"""
+======================================
            Example usage
 ======================================
     # Create an ANN with shape 3 -> 3 -> 2 -> 1
@@ -144,20 +164,32 @@ if __name__ == "__main__":
     ann = ANN(input_size=10)
 
     # Add layers
-    ann.add_hidden_layer(size=5, activation_function=ReLU)  # Add hidden layer
+    ann.add_hidden_layer(size=5, activation_function=ReLU)  # First hidden layer
     ann.add_hidden_layer(
         size=4, activation_function=hyperbolic_tangent
-    )  # Add hidden layer
+    )  # Second hidden layer
     ann.add_hidden_layer(
         size=1, activation_function=logistic_regression
     )  # Output layer
 
-    inputs = [0.5, -1.2, 3.3, -4.2, 1.46, 2.13, 1, 4, -7, 2]
+    # Example input (10 features)
+    inputs = [0.5, -1.2, 3.3, -4.2, 1.46, 2.13, 1.0, 4.0, -7.0, 2.0]
 
-    # Test forward propagation using the for loop method
-    output_for = ann.forward_for(inputs)
-    print("Output using for loop:", output_for)
+    # Example true values (targets) for MAE calculation
+    y_true = [0.8]  # Example expected output for the given inputs
 
-    # Test forward propagation using the reduce method
-    output_reduce = ann.forward_reduce(inputs)
-    print("Output using reduce:", output_reduce)
+    # Forward propagation using the for loop method
+    y_pred_for = ann.forward_for(inputs)
+    print("Predicted output using for loop:", y_pred_for)
+
+    # Calculate MAE
+    mae_for = mean_absolute_error(y_true, y_pred_for)
+    print("For Loop Mean Absolute Error (MAE):", mae_for)
+
+    # Forward propagation using the reduce method
+    y_pred_reduce = ann.forward_reduce(inputs)
+    print("Predicted output using reduce:", y_pred_reduce)
+
+    # Calculate MAE
+    mae_reduce = mean_absolute_error(y_true, y_pred_reduce)
+    print("Reduce Mean Absolute Error (MAE):", mae_reduce)
