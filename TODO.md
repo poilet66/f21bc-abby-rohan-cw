@@ -2,8 +2,8 @@
 
 ## Essential
 
-- [ ] Implement other activation functions (ReLu & Tanh)
-- [ ] Implement ANN (layers of perceptrons that feed into each other)
+- [X] Implement other activation functions (ReLu & Tanh)
+- [X] Implement ANN (layers of perceptrons that feed into each other)
 - [ ] Implement an evaluation metric
 - [ ] Test ANN on a regression task
 - [ ] Implement PSO Algorithm
