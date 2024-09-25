@@ -45,7 +45,7 @@ class ANN:
         self.layers.append(layer)
 
     # Input is list of ints of size self.input_size
-    def output(self, input):
+    def forward(self, input):
         # Send each input to each perceptron in first layer
         # Send each output from each perceptron to each perceptron in next layer
         # So on so forth until we reach last input layer
@@ -53,6 +53,18 @@ class ANN:
         # Calculate final output
         pass
 
+'''
+======================================
+           Example usage
+======================================
+    # Create ANN with shape 3 -> 3 -> 2 -> 1
+    ann = ANN(inputSize=3)
+    ann.add_hidden_layer(3, activation_type=logistic_regression)
+    ann.add_hidden_layer(2, activation_function=logistic_regression)
+    ann.add_output_layer(activation_function=typeActivation)
+
+    ann.output([3, 5, 1])
+'''
 '''
 =======================================
  Example of Insantiation of Perceptron
