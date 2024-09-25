@@ -3,11 +3,13 @@
 ## Essential
 
 - [ ] Implement other activation functions (ReLu & Tanh)
-- [ ] Implement ANN (layers of perceptrons that feed into eachother)
-- [ ] Implement PSO Algorithm
-- [ ] Combine PSO & ANN
+- [ ] Implement ANN (layers of perceptrons that feed into each other)
 - [ ] Implement an evaluation metric
-- [ ] Test on a regression task
+- [ ] Test ANN on a regression task
+- [ ] Implement PSO Algorithm
+- [ ] Test PSO on a regression task (maybe a simpler task instead/as well as?)
+- [ ] Combine PSO & ANN
+- [ ] Test combined on a regression task
 
 ## Might be nice
 
