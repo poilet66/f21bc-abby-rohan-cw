@@ -5,8 +5,10 @@
 - [x] Implement other activation functions (ReLu & Tanh)
 - [x] Implement ANN (layers of perceptrons that feed into each other)
 - [x] Implement an evaluation metric
-- [ ] Fix code so it works with batches instead of just a single input
-- [ ] Test ANN on a regression task
+- [x] Fix code so it works with batches instead of just a single input
+- [x] Preprocess dataset
+- [x] Get dataset working with existing ANN
+- [x] Test ANN on a regression task
 - [ ] Implement PSO Algorithm
 - [ ] Test PSO on a regression task (maybe a simpler task instead/as well as?)
 - [ ] Combine PSO & ANN
