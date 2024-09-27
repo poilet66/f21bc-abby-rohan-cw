@@ -16,7 +16,7 @@
 
 ## Might be nice
 
-- [ ] Lambda implementation of perceptron (more extensibility)
+- [x] Lambda implementation of perceptron (more extensibility)
 
 ## Quality of Life
 
