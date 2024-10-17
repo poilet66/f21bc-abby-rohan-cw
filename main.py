@@ -3,7 +3,7 @@ import numpy as np
 from functools import reduce
 from preprocessing import get_preprocessed_data  # Import the preprocessed data
 from datetime import datetime  # To keep test outputs organised
-from typing import List, Callable
+from typing import List, Callable, Any
 
 """
 ========================================
@@ -44,7 +44,7 @@ class Perceptron:
             activation_function (callable): Activation function to use.
         """
         # Initialise weights and bias
-        self.weights: np.array[float] = np.random.rand(input_size, 1)  # Shape: (input_size, 1)
+        self.weights: np.ndarray[Any, np.dtype[np.float64]] = np.random.rand(input_size, 1)  # Shape: (input_size, 1)
         # Each perceptron has one weight per input feature. So, the weights array has one row per input feature,
         # and only one column (one weight per feature).
 
