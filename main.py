@@ -3,6 +3,7 @@ import numpy as np
 from functools import reduce
 from preprocessing import get_preprocessed_data  # Import the preprocessed data
 from datetime import datetime  # To keep test outputs organised
+from typing import List, Callable
 
 """
 ========================================
@@ -43,15 +44,18 @@ class Perceptron:
             activation_function (callable): Activation function to use.
         """
         # Initialise weights and bias
-        self.weights = np.random.rand(input_size, 1)  # Shape: (input_size, 1)
+        self.weights: np.array[float] = np.random.rand(input_size, 1)  # Shape: (input_size, 1)
         # Each perceptron has one weight per input feature. So, the weights array has one row per input feature,
         # and only one column (one weight per feature).
 
-        self.bias = np.random.rand(1)  # Shape: (1,)
+        self.bias: int = np.random.rand(1)  # Shape: (1,)
         # The bias is a single value added to the weighted sum of inputs before applying the activation function.
 
         # Store the activation function
-        self.activation_function = activation_function
+        self.activation_function: Callable = activation_function
+
+    def __str__(self):
+        return f"PERCEPTRON{{weights={self.weights.flatten()},bias={self.bias},function={self.activation_function.__name__}}}"
 
     def output(self, inputs):
         """
@@ -79,17 +83,6 @@ class Perceptron:
         return self.activation_function(sigma)  # Shape: (batch_size, 1)
         # The activation function is applied to the weighted sum for each example in the batch.
 
-    def getWeights(self):
-        return self.weights
-    
-    def getBias(self):
-        return self.bias
-
-    def setWeights(self, weights: np.array):
-        self.weights = weights
-
-    def setBias(self, bias: int):
-        self.bias = bias
 """
 ========================================
                ANN Class
@@ -105,8 +98,8 @@ class ANN:
         Args:
             input_size (int): Number of input features.
         """
-        self.input_size = input_size
-        self.layers = []  # Stores layers of perceptrons
+        self.input_size: int = input_size
+        self.layers: List[List[Perceptron]]  = []  # Stores layers of perceptrons
 
     def add_hidden_layer(self, size, activation_function):
         """
