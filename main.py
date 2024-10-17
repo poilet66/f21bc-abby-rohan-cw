@@ -79,7 +79,17 @@ class Perceptron:
         return self.activation_function(sigma)  # Shape: (batch_size, 1)
         # The activation function is applied to the weighted sum for each example in the batch.
 
+    def getWeights(self):
+        return self.weights
+    
+    def getBias(self):
+        return self.bias
 
+    def setWeights(self, weights: np.array):
+        self.weights = weights
+
+    def setBias(self, bias: int):
+        self.bias = bias
 """
 ========================================
                ANN Class
