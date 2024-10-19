@@ -1,0 +1,40 @@
+===== ANN Model Results =====
+Timestamp: 2024-10-19 12:30:40
+
+--- Training Results (For Loop) ---
+Mean Absolute Error (Training): 34.8487
+First 5 Training Predictions:
+True: 52.9083, Predicted: 0.9168
+True: 55.8958, Predicted: 0.9094
+True: 74.4979, Predicted: 0.9186
+True: 35.3012, Predicted: 0.9078
+True: 10.5352, Predicted: 0.9139
+
+--- Training Results (Reduce) ---
+Mean Absolute Error (Training): 34.8487
+First 5 Training Predictions:
+True: 52.9083, Predicted: 0.9168
+True: 55.8958, Predicted: 0.9094
+True: 74.4979, Predicted: 0.9186
+True: 35.3012, Predicted: 0.9078
+True: 10.5352, Predicted: 0.9139
+
+--- Test Results (For Loop) ---
+Mean Absolute Error (Test): 35.1382
+First 5 Test Predictions:
+True: 39.6993, Predicted: 0.8746
+True: 12.5416, Predicted: 0.7418
+True: 30.9575, Predicted: 0.7574
+True: 44.0920, Predicted: 0.9157
+True: 44.3954, Predicted: 0.9169
+
+--- Test Results (Reduce) ---
+Mean Absolute Error (Test): 35.1382
+First 5 Test Predictions:
+True: 39.6993, Predicted: 0.8746
+True: 12.5416, Predicted: 0.7418
+True: 30.9575, Predicted: 0.7574
+True: 44.0920, Predicted: 0.9157
+True: 44.3954, Predicted: 0.9169
+
+===== End of Results =====
