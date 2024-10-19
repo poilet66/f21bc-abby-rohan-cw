@@ -10,13 +10,14 @@
 - [x] Get dataset working with existing ANN
 - [x] Test ANN on a regression task
 - [ ] Implement PSO Algorithm
-    - [ ] Create a way of either updating weights/biases in existing ANN OR
+    - [x] Create a way of either updating weights/biases in existing ANN OR
     - [ ] Way to instantiate NEW ANN with predetermined weights/biased
-    - [ ] Specify N-dimensional space of all possible weights/biases (each axis' range = range of weight/bias) (explore what these are)
-    - [ ] Create particle class
-        - [ ] Direction
+    - [x] Specify N-dimensional space of all possible weights/biases (each axis' range = range of weight/bias) (explore what these are)
+    - [x] Create particle class
+        - [x] Position
+        - [x] Direction
         - [ ] Direction change algorithm
-    - [ ] Link particle to ANN/forward pass algorithm to determine loss of particle position
+        - [ ] Current location fitness test
     - [ ] Update/iteration system
     - [ ] Return optimal space
 - [ ] Test PSO on a regression task (maybe a simpler task instead/as well as?)
