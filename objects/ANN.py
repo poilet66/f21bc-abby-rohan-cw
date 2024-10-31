@@ -11,6 +11,9 @@ from typing import List, Any
 
 
 class ANN:
+    """
+    ANN class :)
+    """
     def __init__(self, input_size):
         """
         Initialise the neural network.

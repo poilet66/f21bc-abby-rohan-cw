@@ -11,6 +11,9 @@ INITIAL_LOW_BOUND = np.float64(-1)
 INTIIAL_HIGH_BOUND = np.float64(1)
 
 class Particle():
+    """
+    Particle within problemspace, do these need to store their fitness? Maybe.
+    """
     def __init__(self, problem_space: ProblemSpace) -> None:
         self.problem_space: ProblemSpace = problem_space # Reference to problem space (so we can access local/global maximums etc)
         self.location: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.getDimensions()) # Init to random location within bounds
@@ -27,4 +30,6 @@ class Particle():
     # Calculate score of current area (loss from using current position as ANN parameters)
     # I.e.: Set ANN weights/biases to current position -> do forward pass -> calculate loss
     def calculateFitness(self):
-        pass
+        self.problem_space.ann.updateParameters(self.location)
+        # results = self.problem_space.ann.forward_for() etc.
+        # loss = self.problem_space.ann.calculateLoss(results) etc.
