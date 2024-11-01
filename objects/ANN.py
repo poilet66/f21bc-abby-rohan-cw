@@ -36,8 +36,20 @@ class ANN:
         layer_sizes = [len(layer) for layer in self.layers]
         return [self.input_size] + layer_sizes
     
-    def updateParameters(self, parameters: np.ndarray[Any, np.dtype[np.float64]]) -> None:
-        pass
+    def countParams(self) -> int:
+        total_params = 0
+        for layer in self.layers:
+            for perceptron in layer:
+                total_params += perceptron.numParams()
+        return total_params    
+
+    def updateParameters(self, parameters: np.ndarray) -> None:
+        start = 0
+        for layer in self.layers:
+            for perceptron in layer:
+                num_params = perceptron.numParams()
+                perceptron.updateParams(parameters[start:start + num_params]) # get the slice of the list that corresponds to this perceptrons weights + bias, update
+                start += num_params # move window/slice along
 
     def add_hidden_layer(self, size, activation_function):
         """

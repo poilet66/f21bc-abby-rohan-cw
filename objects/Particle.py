@@ -16,16 +16,16 @@ class Particle():
     """
     def __init__(self, problem_space: ProblemSpace) -> None:
         self.problem_space: ProblemSpace = problem_space # Reference to problem space (so we can access local/global maximums etc)
-        self.location: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.getDimensions()) # Init to random location within bounds
-        self.velocity: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.getDimensions()) # Velocity to same, maybe different bounds for this?
+        self.location: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.ann.countParams()) # Init to random location within bounds
+        self.velocity: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.ann.countParams()) # Velocity to same, maybe different bounds for this?
         self.currentLoss: np.float64 = np.float64(-1) 
         
     def calculateNextPosition(self):
-        pass
+        raise Exception('Not implemented yet')
 
     def calculateVelocityChange(self):
         # Probably gonna want to use problem_space here, need methods within that to find global maximums etc
-        pass
+        raise Exception('Not implemented yet')
 
     # Calculate score of current area (loss from using current position as ANN parameters)
     # I.e.: Set ANN weights/biases to current position -> do forward pass -> calculate loss

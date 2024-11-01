@@ -31,6 +31,14 @@ class Perceptron:
         self.weights = new_weights
         self.bias = new_bias
 
+    def numParams(self) -> int:
+        return len(self.weights) + 1 # All weights + bias
+    
+    def updateParams(self, params: np.ndarray) -> None:
+        input_size = self.weights.shape[0]
+        self.weights = params[:input_size].reshape((input_size, 1)) # update weight (make sure array is of length input_size + is in correct shape)
+        self.bias = params[input_size] # bias is last input number
+
     def __str__(self):
         return f"PERCEPTRON{{weights={self.weights.flatten()},bias={self.bias},function={self.activation_function.__name__}}}"
 
