@@ -33,3 +33,4 @@ class Particle():
         self.problem_space.ann.updateParameters(self.location)
         # results = self.problem_space.ann.forward_for() etc.
         # loss = self.problem_space.ann.calculateLoss(results) etc.
+        raise Exception('Not implemented yet')
