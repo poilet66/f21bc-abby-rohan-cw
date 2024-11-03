@@ -22,7 +22,7 @@ class Particle():
         
     def calculateNextPosition(self):
         raise Exception('Not implemented yet')
-
+    
     def calculateVelocityChange(self):
         # Probably gonna want to use problem_space here, need methods within that to find global maximums etc
         raise Exception('Not implemented yet')

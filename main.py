@@ -40,7 +40,7 @@ Example of creating an ANN with shape 3 -> 3 -> 2 -> 1:
 
     # Example input (3 features)
     inputs = [3, 5, 1]
-    output = ann.forward_for(inputs)  # Forward pass using the for-loop method
+    output = ann.forward(inputs)  # Forward pass
     print("Output:", output)
 
 Example of instantiating a Perceptron:
@@ -73,20 +73,12 @@ if __name__ == "__main__":
     )  # Output layer
 
     # Perform forward propagation on the training data using the for loop method
-    y_pred_train_for = ann.forward_for(X_train)
-    mae_train_for = mean_absolute_error(y_train, y_pred_train_for)
-
-    # Perform forward propagation on the training data using the reduce method
-    y_pred_train_reduce = ann.forward_reduce(X_train)
-    mae_train_reduce = mean_absolute_error(y_train, y_pred_train_reduce)
+    y_pred_train = ann.forward_pass(X_train)
+    mae_train_for = mean_absolute_error(y_train, y_pred_train)
 
     # Perform forward propagation on the test data using the for loop method
-    y_pred_test_for = ann.forward_for(X_test)
-    mae_test_for = mean_absolute_error(y_test, y_pred_test_for)
-
-    # Perform forward propagation on the test data using the reduce method
-    y_pred_test_reduce = ann.forward_reduce(X_test)
-    mae_test_reduce = mean_absolute_error(y_test, y_pred_test_reduce)
+    y_pred_test = ann.forward_pass(X_test)
+    mae_test_for = mean_absolute_error(y_test, y_pred_test)
 
     # Create the "test_results" directory if it does not exist
     output_dir = "test_results"
@@ -111,16 +103,7 @@ if __name__ == "__main__":
         f.write("First 5 Training Predictions:\n")
         for i in range(5):
             f.write(
-                f"True: {y_train[i]:.4f}, Predicted: {y_pred_train_for[i][0]:.4f}\n"
-            )
-
-        # Write training results using reduce
-        f.write("\n--- Training Results (Reduce) ---\n")
-        f.write(f"Mean Absolute Error (Training): {mae_train_reduce:.4f}\n")
-        f.write("First 5 Training Predictions:\n")
-        for i in range(5):
-            f.write(
-                f"True: {y_train[i]:.4f}, Predicted: {y_pred_train_reduce[i][0]:.4f}\n"
+                f"True: {y_train[i]:.4f}, Predicted: {y_pred_train[i][0]:.4f}\n"
             )
 
         # Write testing results using for loop
@@ -128,16 +111,7 @@ if __name__ == "__main__":
         f.write(f"Mean Absolute Error (Test): {mae_test_for:.4f}\n")
         f.write("First 5 Test Predictions:\n")
         for i in range(5):
-            f.write(f"True: {y_test[i]:.4f}, Predicted: {y_pred_test_for[i][0]:.4f}\n")
-
-        # Write testing results using reduce
-        f.write("\n--- Test Results (Reduce) ---\n")
-        f.write(f"Mean Absolute Error (Test): {mae_test_reduce:.4f}\n")
-        f.write("First 5 Test Predictions:\n")
-        for i in range(5):
-            f.write(
-                f"True: {y_test[i]:.4f}, Predicted: {y_pred_test_reduce[i][0]:.4f}\n"
-            )
+            f.write(f"True: {y_test[i]:.4f}, Predicted: {y_pred_test[i][0]:.4f}\n")
 
         # Close the file
         f.write("\n===== End of Results =====\n")

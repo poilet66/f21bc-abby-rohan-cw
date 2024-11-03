@@ -72,7 +72,7 @@ class ANN:
         # Each perceptron in the layer will take the outputs of the previous layer (or input features) as inputs.
         self.layers.append(layer)
 
-    def forward_for(self, inputs):
+    def forward_pass(self, inputs):
         """
         Perform forward propagation using a for loop.
 
@@ -100,24 +100,3 @@ class ANN:
             # The outputs from all perceptrons in the current layer are combined into the input for the next layer.
 
         return inputs  # Final output shape: (batch_size, output_size)
-
-    def forward_reduce(self, inputs):
-        """
-        Perform forward propagation using the reduce function.
-
-        Args:
-            inputs (ndarray): Input data of shape (batch_size, input_size).
-            - `batch_size`: The number of examples in the batch.
-            - `input_size`: The number of features per example.
-
-        Returns:
-            ndarray: Output of the network, shape (batch_size, output_size).
-            - `output_size`: Number of perceptrons in the output layer.
-        """
-        inputs = np.array(inputs)  # Ensure inputs are a NumPy array
-
-        def apply_layer(input_data, layer):
-            outputs = [perceptron.output(input_data) for perceptron in layer]
-            return np.hstack(outputs)
-
-        return reduce(apply_layer, self.layers, inputs)
