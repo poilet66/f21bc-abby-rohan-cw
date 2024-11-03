@@ -26,6 +26,7 @@ class Particle():
         self.currentLoss: np.float64 = np.float64(-1)
         self.informants: List["Particle"] = []
         self.previous_fittest_location = self.location
+        self.previous_fittest_informant_location = None
         
         
     def getNewInformants(self) -> List["Particle"]:
@@ -49,7 +50,8 @@ class Particle():
 
         #calculate the loss using ANN claculate loss method
         self.currentLoss = self.problem_space.ann.calculate_loss(y_train, y_pred)
-        return self.currentLoss
+        self.currentFitness = 1 / (1 + self.currentLoss)  # ensures fitness is between 0 and 1 (1 is best)
+        return self.currentFitness
     
     def fittestInformantLocation(self) -> np.ndarray:
         best_particle = self.informants[0] # assume first informant has best fitness

@@ -3,6 +3,7 @@ import numpy as np
 from objects.ANN import ANN
 from objects.ActivationFunctions import *
 from preprocessing import get_preprocessed_data  # Import the preprocessed data
+from objects.ActivationFunctions import logistic_regression, hyperbolic_tangent, ReLU
 from datetime import datetime  # To keep test outputs organised
 """
 

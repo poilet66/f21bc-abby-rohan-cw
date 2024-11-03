@@ -15,15 +15,18 @@ class ProblemSpace():
         self.particles: List[Particle] = []
         self.global_best = -100000000 # initialise global best to very bad
         for i in range(num_particles): self.addParticle(Particle()) ## add our particles
-        # now all particles exist, do extra initialisation (like setting informants)
+        # set all particles informants
         for particle in self.particles:
             particle.informants = particle.getNewInformants()
+        # set fittest informant location (TODO can we check this to just set if informants is not None?)
+        for particle in self.particles:
+            particle.previous_fittest_informant_location = particle.fittestInformantLocation()
 
     def addParticle(self, particle: Particle):
         self.particles.append(particle)
 
     def doEpoch(self) -> None:
         for particle in self.particles:
-            particle_fitness = particle.calculateFitness(X_train, y_train)
-            self.global_best = max(self.global_best, particle_fitness) # set new best if fitness is higher
+            particle_fitness = particle.calculateFitness(x_train, y_train)
+            if particle_fitness > self.global_best: pass # TODO :FINSIHED ME
         raise Exception('Not implemented yet')
