@@ -100,3 +100,7 @@ class ANN:
             # The outputs from all perceptrons in the current layer are combined into the input for the next layer.
 
         return inputs  # Final output shape: (batch_size, output_size)
+    
+    def calculate_loss(self) -> float:
+        
+        raise Exception('Not implemented yet')

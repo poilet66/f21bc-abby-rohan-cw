@@ -5,29 +5,7 @@ from objects.ActivationFunctions import *
 from preprocessing import get_preprocessed_data  # Import the preprocessed data
 from datetime import datetime  # To keep test outputs organised
 """
-========================================
-           Evaluation Function
-========================================
-"""
 
-
-def mean_absolute_error(y_true, y_pred):
-    """
-    Calculate the mean absolute error between true and predicted values.
-
-    Args:
-        y_true: True target values (shape: (batch_size,)).
-        y_pred: Predicted values (shape: (batch_size,)).
-
-    Returns:
-        float: Mean absolute error.
-    """
-    y_true = np.array(y_true).flatten()  # Shape: (batch_size,)
-    y_pred = np.array(y_pred).flatten()  # Shape: (batch_size,)
-    return np.mean(np.abs(y_true - y_pred))
-
-
-"""
 ========================================
               Example Usage
 ========================================
