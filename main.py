@@ -96,3 +96,10 @@ if __name__ == "__main__":
         f.write("\n===== End of Results =====\n")
 
     print(f"Results written to {file_name}.")
+
+
+    """
+    X_train, y_train, X_test, y_test = get_preprocessed_data()
+    ann = ANN()
+    
+    """

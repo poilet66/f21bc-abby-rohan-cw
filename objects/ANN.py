@@ -14,6 +14,7 @@ class ANN:
     """
     ANN class :)
     """
+
     def __init__(self, input_size):
         """
         Initialise the neural network.
@@ -101,6 +102,24 @@ class ANN:
 
         return inputs  # Final output shape: (batch_size, output_size)
     
-    def calculate_loss(self) -> float:
-        
-        raise Exception('Not implemented yet')
+    def calculate_loss(self, y_true, y_pred) -> float:
+        #get the actual value
+        y_true = np.array(y_true).flatten()  # Shape: (batch_size,)
+        #get the predicted value
+        y_pred = np.array(y_pred).flatten()  # Shape: (batch_size,)
+
+        #calculate loss using MAE
+        loss = np.mean(np.abs(y_true - y_pred))
+        #returns the calculated loss
+        return loss
+
+    # Calculate score of current area (loss from using current position as ANN parameters)
+    # I.e.: Set ANN weights/biases to current position -> do forward pass -> calculate loss
+    def calculateFitness(self, parameters: np.ndarray):
+        #update parameters based on particle position
+        self.updateParameters(parameters)
+
+        #calculate the loss using ANN claculate loss method
+        currentLoss = self.calculate_loss(y_train, y_pred)
+        currentFitness = 1 / (1 + currentLoss)  # ensures fitness is between 0 and 1 (1 is best)
+        return self.currentFitness

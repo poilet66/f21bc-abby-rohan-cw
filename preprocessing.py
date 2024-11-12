@@ -65,12 +65,12 @@ train_data = dataset[:split_index]  # Training data
 test_data = dataset[split_index:]  # Testing data
 
 # Separate features (x) and target (y) for both training and testing sets
-x_train = train_data[:, :-1]  # Training features
-y_train = train_data[:, -1]  # Training target
-x_test = test_data[:, :-1]  # Testing features
-y_test = test_data[:, -1]  # Testing target
+trainData = train_data[:, :-1]  # Training features
+trainActual = train_data[:, -1]  # Training target
+testData = test_data[:, :-1]  # Testing features
+testActual = test_data[:, -1]  # Testing target
 
 
 # Return training and testing data
 def get_preprocessed_data():
-    return x_train, y_train, x_test, y_test
+    return trainData, trainActual, testData, testActual

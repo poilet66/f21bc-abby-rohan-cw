@@ -23,7 +23,7 @@ class Particle():
         self.velocity: np.ndarray[Any, np.dtype[np.float64]] = np.random.uniform(
             low=INITIAL_LOW_BOUND, high=INTIIAL_HIGH_BOUND, size=problem_space.ann.countParams()
         ) # Velocity to same, maybe different bounds for this?
-        self.currentLoss: np.float64 = np.float64(-1)
+        self.current_fitness: np.float64 = np.float64(-1)
         self.informants: List["Particle"] = []
         self.previous_fittest_location = self.location
         self.previous_fittest_informant_location = None
@@ -41,20 +41,9 @@ class Particle():
     def calculateVelocityChange(self):
         # Probably gonna want to use problem_space here, need methods within that to find global maximums etc
         raise Exception('Not implemented yet')
-
-    # Calculate score of current area (loss from using current position as ANN parameters)
-    # I.e.: Set ANN weights/biases to current position -> do forward pass -> calculate loss
-    def calculateFitness(self, y_train, y_pred):
-        #update parameters based on particle position
-        self.problem_space.ann.updateParameters(self.location)
-
-        #calculate the loss using ANN claculate loss method
-        self.currentLoss = self.problem_space.ann.calculate_loss(y_train, y_pred)
-        self.currentFitness = 1 / (1 + self.currentLoss)  # ensures fitness is between 0 and 1 (1 is best)
-        return self.currentFitness
     
     def fittestInformantLocation(self) -> np.ndarray:
         best_particle = self.informants[0] # assume first informant has best fitness
         for particle in self.informants[1:]:
-            best_particle = max(best_particle.calculateFitness(), particle.calculateFitness()) # if higher, reassign
+            best_particle = max(self.problem_space.calculate_fitness(self.location), self.problem_space.calculate_fitness(particle.location)) # if higher, reassign
         return best_particle.location # return best particles location
