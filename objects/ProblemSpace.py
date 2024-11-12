@@ -11,18 +11,29 @@ class ProblemSpace():
     Encapsulating class for particles + ANN for problem
     May contain methods for calcuating local/global bests, etc.
     """
-    def __init__(self, X_train: np.ndarray, y_train: np.ndarray, ann: ANN, num_particles: int) -> None:
+    def __init__(self, X_train: np.ndarray, y_train: np.ndarray, ann: ANN, num_particles: int, # Specific to problem
+                 alpha: float = 0.5, beta: float = 0.5, gamma: float = 0.5, delta: float = 0.5, epsilon: float = 0.5 # Hyperparameter option TODO: Do these need to sum to 1?
+                 ) -> None:
+        
+        # Init variables
         self.ann: ANN = ann
         self.X_train = X_train
         self.y_train = y_train
+        self.alpha = alpha
+        self.beta = beta
+        self.gamma = gamma
+        self.delta = delta
+        self.epsilon = epsilon
         self.particles: List[Particle] = []
-        self.global_best = -100000000 # initialise global best to very bad
-        for i in range(num_particles): self.addParticle(Particle()) ## add our particles
-        # set all particles informants
+
+        ## add our particles
+        for i in range(num_particles): self.addParticle(Particle())
+
+        # Assume global best to be first particles loc
+        self.global_best = self.particles[0].location
+        # set all particles informants, and find their best informant location
         for particle in self.particles:
             particle.informants = particle.getNewInformants()
-        # set fittest informant location (TODO can we check this to just set if informants is not None?)
-        for particle in self.particles:
             particle.previous_fittest_informant_location = particle.fittestInformantLocation()
 
         # instantiate all particles (current best location etc, current informants)
@@ -45,7 +56,24 @@ class ProblemSpace():
         self.particles.append(particle)
 
     def doEpoch(self) -> None:
+
         for particle in self.particles:
-            particle_fitness = particle.calculateFitness(x_train, y_train)
-            if particle_fitness > self.global_best: pass # TODO :FINSIHED ME
+            # Update pos
+            particle.updatePosition()
+            # Reassign global best if needed
+            if self.calculate_fitness(particle.location) > self.calculate_fitness(self.global_best): 
+                self.global_best = particle.location
+
+        # After all particles have moved, update their fields
+        for particle in self.particles:
+            particle.update_fields()
+        
         raise Exception('Not implemented yet')
+    
+    def get_best_location(self, epochs: int) -> np.ndarray:
+        # Do epochs
+        for i in range(epochs):
+            print(f'Beginning epoch {i}')
+            self.doEpoch()
+            print(f'Epoch {i} completed')
+        return self.global_best # return best location

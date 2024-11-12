@@ -64,7 +64,7 @@ split_index = int(0.7 * len(dataset))
 train_data = dataset[:split_index]  # Training data
 test_data = dataset[split_index:]  # Testing data
 
-# Separate features (x) and target (y) for both training and testing sets
+# Separate features and target for both training and testing sets
 trainData = train_data[:, :-1]  # Training features
 trainActual = train_data[:, -1]  # Training target
 testData = test_data[:, :-1]  # Testing features
