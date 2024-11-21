@@ -77,3 +77,11 @@ class ProblemSpace():
             self.doEpoch()
             print(f'Epoch {i} completed')
         return self.global_best # return best location
+    
+    def k_iters(self, num_iters: int) -> None:
+        count = 0
+        for _ in range(num_iters):
+            print(f'Beginning epoch {count}')
+            self.doEpoch()
+            count += 1
+            

@@ -76,8 +76,9 @@ class Particle():
         best_particle = self.informants[0] # assume first informant has best fitness
         for particle in self.informants[1:]:
             # If new particle has better fitness, reassign best particle
-            if self.get_fitness(particle.location > self.get_fitness(best_particle.location)):
+            if self.get_fitness(particle.location) > self.get_fitness(best_particle.location):
                 best_particle = particle
+
         return best_particle.location # return best particles location
     
     def update_fields(self) -> None:
@@ -88,7 +89,6 @@ class Particle():
         # Update previous informant best
         if(self.get_fitness(self.fittestInformantLocation()) > self.get_fitness(self.previous_fittest_informant_location)):
             self.previous_fittest_informant_location = self.fittestInformantLocation() 
-        raise Exception('Not implemented yet')
         
     def get_fitness(self, location: np.ndarray) -> np.float64:
         return self.problem_space.calculate_fitness(location)
