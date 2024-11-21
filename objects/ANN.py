@@ -1,6 +1,5 @@
 import numpy as np
-from Perceptron import Perceptron
-from functools import reduce
+from .Perceptron import Perceptron
 from typing import List, Any
 
 """
@@ -12,10 +11,10 @@ from typing import List, Any
 
 class ANN:
     """
-    ANN class :)
+    Implementation of a simple Artificial Neural Network.
     """
 
-    def __init__(self, input_size):
+    def __init__(self, input_size: int):
         """
         Initialise the neural network.
 
@@ -23,92 +22,82 @@ class ANN:
             input_size (int): Number of input features.
         """
         self.input_size: int = input_size
-        self.layers: List[List[Perceptron]]  = []  # Stores layers of perceptrons
+        self.layers: List[List[Perceptron]] = []
 
-    """
-    Get shape of ANN (including inputs)
-    I.e.: ANN with 3 inputs + following structure:
-    [3 -> 2] 
-    will return: [3, 3, 2]
-
-    This will help us regenerate said ANN with new parameters while tuning its parameters
-    """
     def shape(self) -> List[int]:
+        """
+        Get the structure of the ANN, including input size and number of perceptrons in each layer.
+        """
         layer_sizes = [len(layer) for layer in self.layers]
         return [self.input_size] + layer_sizes
-    
+
     def countParams(self) -> int:
+        """
+        Count the total number of parameters (weights + biases) in the network.
+        """
         total_params = 0
         for layer in self.layers:
             for perceptron in layer:
                 total_params += perceptron.numParams()
-        return total_params    
+        return total_params
 
     def updateParameters(self, parameters: np.ndarray) -> None:
+        """
+        Update the parameters of the network using a given parameter vector.
+
+        Args:
+            parameters (ndarray): Vector of parameters (weights and biases).
+        """
         start = 0
         for layer in self.layers:
             for perceptron in layer:
                 num_params = perceptron.numParams()
-                perceptron.updateParams(parameters[start:start + num_params]) # get the slice of the list that corresponds to this perceptrons weights + bias, update
-                start += num_params # move window/slice along
+                perceptron.updateParams(parameters[start : start + num_params])
+                start += num_params
 
-    def add_hidden_layer(self, size, activation_function):
+    def add_hidden_layer(self, size: int, activation_function: callable) -> None:
         """
-        Add a hidden layer to the network.
+        Add a hidden layer to the ANN.
 
         Args:
             size (int): Number of perceptrons in the layer.
             activation_function (callable): Activation function for the layer.
         """
-        # Determine the input size for the layer
-        if not self.layers:
-            layer_input_size = self.input_size  # First layer uses input data size
-        else:
-            layer_input_size = len(
-                self.layers[-1]
-            )  # Other layers use size of the previous layer
-
-        # Create the layer with the specified activation function
+        if not callable(activation_function):
+            raise ValueError("Activation function must be callable.")
+        layer_input_size = self.input_size if not self.layers else len(self.layers[-1])
         layer = [Perceptron(layer_input_size, activation_function) for _ in range(size)]
-        # Each perceptron in the layer will take the outputs of the previous layer (or input features) as inputs.
         self.layers.append(layer)
 
-    def forward_pass(self, inputs):
+    def forward_pass(self, inputs: np.ndarray) -> np.ndarray:
         """
-        Perform forward propagation using a for loop.
+        Perform forward propagation through the network.
 
         Args:
-            inputs (ndarray): Input data of shape (batch_size, input_size).
-            - `batch_size`: The number of examples in the batch.
-            - `input_size`: The number of features per example.
+            inputs (ndarray): Input data.
 
         Returns:
-            ndarray: Output of the network, shape (batch_size, output_size).
-            - `output_size`: Number of perceptrons in the output layer.
+            ndarray: Output from the final layer.
         """
-        inputs = np.array(inputs)  # Ensure inputs are a NumPy array
-
-        # Forward propagation through each layer
+        inputs = np.array(inputs)
         for layer in self.layers:
             outputs = []
             for perceptron in layer:
-                # Each perceptron processes the entire batch
-                output = perceptron.output(inputs)  # Shape: (batch_size, 1)
-                # Each perceptron returns one output per input example.
-                outputs.append(output)
-            # Stack outputs horizontally to form inputs for the next layer
-            inputs = np.hstack(outputs)  # Shape: (batch_size, layer_size)
-            # The outputs from all perceptrons in the current layer are combined into the input for the next layer.
+                outputs.append(perceptron.output(inputs))
+            inputs = np.hstack(outputs)
+        return inputs
 
-        return inputs  # Final output shape: (batch_size, output_size)
-    
-    def calculate_loss(self, y_true, y_pred) -> float:
-        #get the actual value
-        y_true = np.array(y_true).flatten()  # Shape: (batch_size,)
-        #get the predicted value
-        y_pred = np.array(y_pred).flatten()  # Shape: (batch_size,)
+    def calculate_loss(self, y_true: np.ndarray, y_pred: np.ndarray) -> float:
+        """
+        Calculate the Mean Absolute Error (MAE) loss for given predictions.
 
-        #calculate loss using MAE
-        loss = np.mean(np.abs(y_true - y_pred))
-        #returns the calculated loss
-        return loss
+        Args:
+            y_true (ndarray): True values.
+            y_pred (ndarray): Predicted values.
+
+        Returns:
+            float: MAE loss.
+        """
+        y_true = np.array(y_true).flatten()
+        y_pred = np.array(y_pred).flatten()
+        return np.mean(np.abs(y_true - y_pred))

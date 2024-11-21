@@ -20,4 +20,3 @@ def hyperbolic_tangent(x):
 def ReLU(x):
     """Rectified Linear Unit (ReLU) activation function."""
     return np.maximum(0, x)
-
