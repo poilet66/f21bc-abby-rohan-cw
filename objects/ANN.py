@@ -14,7 +14,7 @@ class ANN:
     Implementation of a simple Artificial Neural Network.
     """
 
-    def __init__(self, input_size: int):
+    def __init__(self, input_size):
         """
         Initialise the neural network.
 
@@ -22,7 +22,7 @@ class ANN:
             input_size (int): Number of input features.
         """
         self.input_size: int = input_size
-        self.layers: List[List[Perceptron]] = []
+        self.layers: List[List[Perceptron]] = [] # list of layers each containing perceptrons
 
     def shape(self) -> List[int]:
         """
@@ -33,7 +33,7 @@ class ANN:
 
     def countParams(self) -> int:
         """
-        Count the total number of parameters (weights + biases) in the network.
+        Count the total number of trainable parameters (weights + biases) in the network.
         """
         total_params = 0
         for layer in self.layers:
@@ -41,7 +41,7 @@ class ANN:
                 total_params += perceptron.numParams()
         return total_params
 
-    def updateParameters(self, parameters: np.ndarray) -> None:
+    def updateParameters(self, parameters) -> None:
         """
         Update the parameters of the network using a given parameter vector.
 
@@ -55,7 +55,7 @@ class ANN:
                 perceptron.updateParams(parameters[start : start + num_params])
                 start += num_params
 
-    def add_hidden_layer(self, size: int, activation_function: callable) -> None:
+    def add_hidden_layer(self, size, activation_function) -> None:
         """
         Add a hidden layer to the ANN.
 
@@ -63,13 +63,11 @@ class ANN:
             size (int): Number of perceptrons in the layer.
             activation_function (callable): Activation function for the layer.
         """
-        if not callable(activation_function):
-            raise ValueError("Activation function must be callable.")
-        layer_input_size = self.input_size if not self.layers else len(self.layers[-1])
-        layer = [Perceptron(layer_input_size, activation_function) for _ in range(size)]
+        layer_input_size = self.input_size if not self.layers else len(self.layers[-1]) # determin input size of new layer
+        layer = [Perceptron(layer_input_size, activation_function) for _ in range(size)] # create layer with specified number of neurons
         self.layers.append(layer)
 
-    def forward_pass(self, inputs: np.ndarray) -> np.ndarray:
+    def forward_pass(self, inputs) -> np.ndarray:
         """
         Perform forward propagation through the network.
 
@@ -80,14 +78,16 @@ class ANN:
             ndarray: Output from the final layer.
         """
         inputs = np.array(inputs)
-        for layer in self.layers:
+
+        for layer in self.layers: # process through each perceptron in the layer
             outputs = []
             for perceptron in layer:
                 outputs.append(perceptron.output(inputs))
-            inputs = np.hstack(outputs)
+
+            inputs = np.hstack(outputs) # combine perceptron outputs for next layer
         return inputs
 
-    def calculate_loss(self, y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    def calculate_loss(self, y_true, y_pred) -> float:
         """
         Calculate the Mean Absolute Error (MAE) loss for given predictions.
 

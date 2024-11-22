@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 from objects.Particle import Particle
 
 
@@ -18,6 +19,8 @@ class ProblemSpace:
         self.fitness_function = fitness_function
         self.global_best_location = None
         self.global_best_fitness = float("-inf")
+        self.best_training_mae = float("inf")
+        self.best_test_mae = float("inf")
         self.stagnation_count = 0
         self.best_fitness_history = []
 
@@ -53,7 +56,6 @@ class ProblemSpace:
         """
         Optimised PSO with improved exploration and stagnation handling.
         """
-        best_test_mae = float("inf")
         epochs_without_improvement = 0
         best_solution = None
 
@@ -113,12 +115,15 @@ class ProblemSpace:
             test_mae = np.mean(np.abs(y_test - y_test_pred.flatten()))
 
             # Early stopping with patience
-            if test_mae < best_test_mae:
-                best_test_mae = test_mae
+            if test_mae < self.best_test_mae:
+                self.best_test_mae = test_mae
                 best_solution = self.global_best_location.copy()
                 epochs_without_improvement = 0
             else:
                 epochs_without_improvement += 1
+
+            # Reassign training mae if needed
+            self.best_training_mae = min(self.best_training_mae, train_mae)
 
             # Random restart if stuck
             if epochs_without_improvement >= 30:
@@ -144,7 +149,7 @@ class ProblemSpace:
 
             print(
                 f"Epoch {epoch + 1}/{epochs}, Training MAE: {train_mae:.4f}, "
-                f"Test MAE: {test_mae:.4f}, Best Test MAE: {best_test_mae:.4f}, "
+                f"Test MAE: {test_mae:.4f}, Best Test MAE: {self.best_test_mae:.4f}, "
                 f"Learning Rate: {self.w:.4f}"
             )
 
@@ -152,3 +157,12 @@ class ProblemSpace:
         if best_solution is not None:
             self.ann.updateParameters(best_solution)
             self.global_best_location = best_solution
+
+    def copy(self):
+        """
+        Creates a deep copy of the ProblemSpace instance.
+        Returns a new ProblemSpace object with copies of all attributes.
+        """
+        # Use copy.deepcopy to create a completely new instance
+        return copy.deepcopy(self)
+    

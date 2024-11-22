@@ -8,7 +8,7 @@ import numpy as np
 
 
 class Perceptron:
-    def __init__(self, input_size: int, activation_function: callable):
+    def __init__(self, input_size, activation_function):
         """
         Initialise the perceptron with random weights and bias.
 
@@ -26,7 +26,7 @@ class Perceptron:
         """
         return self.weights.size + 1
 
-    def updateParams(self, params: np.ndarray) -> None:
+    def updateParams(self, params) -> None:
         """
         Update perceptron weights and bias.
 
@@ -38,7 +38,7 @@ class Perceptron:
         self.weights = params[:-1].reshape(self.weights.shape)
         self.bias = params[-1]
 
-    def output(self, inputs: np.ndarray) -> np.ndarray:
+    def output(self, inputs) -> np.ndarray:
         """
         Calculate the output of the perceptron.
 

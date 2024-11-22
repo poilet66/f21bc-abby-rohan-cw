@@ -6,31 +6,33 @@ class Particle:
         """
         Initialise a particle with random position and velocity.
         """
-        self.location = np.random.uniform(bounds[0], bounds[1], size=num_dimensions)
-        velocity_range = (bounds[1] - bounds[0]) * 0.1
+        self.location = np.random.uniform(bounds[0], bounds[1], size=num_dimensions) # initialise with a random position within the bounds
+        velocity_range = (bounds[1] - bounds[0]) * 0.1 #initialise velocity range with smaller range than the position
         self.velocity = np.random.uniform(
             -velocity_range, velocity_range, size=num_dimensions
         )
+        #initialise best known position and fitness
         self.best_location = self.location.copy()
         self.best_fitness = float("-inf")
-        self.stagnant_counter = 0  # Track iterations without improvement
+        self.not_moved_counter = 0  # Track iterations without improvement
 
     def update_velocity(self, global_best, w, c1, c2, bounds, epoch, total_epochs):
         """
-        Update velocity with local minima escape mechanism.
+        Update velocity with random movement if stuck
         """
-        # Random perturbation if stuck in local minimum
-        if self.stagnant_counter > 10:
-            perturbation = np.random.normal(0, 0.1, size=len(self.location))
-            self.velocity += perturbation
-            self.stagnant_counter = 0
+        # Random movement if stuck for 10 epochs
+        if self.not_moved_counter > 10:
+            movement = np.random.normal(0, 0.1, size=len(self.location))
+            self.velocity += movement
+            self.not_moved_counter = 0
 
-        cognitive = c1 * np.random.random() * (self.best_location - self.location)
-        social = c2 * np.random.random() * (global_best - self.location)
+        cognitive = c1 * np.random.random() * (self.best_location - self.location) #pulls towards particle's best location
+        social = c2 * np.random.random() * (global_best - self.location) # pull towards global best location
 
-        # Add momentum with adaptive weight
+        # decrease momentum over time
         momentum = w * (1 - epoch / total_epochs) * self.velocity
-        self.velocity = momentum + cognitive + social
+
+        self.velocity = momentum + cognitive + social #mix movements together 
 
         # Dynamic velocity clamping with more aggressive early exploration
         max_velocity = (bounds[1] - bounds[0]) * np.exp(-2 * epoch / total_epochs)
@@ -40,10 +42,10 @@ class Particle:
         """
         Update the particle's location and handle boundary violations.
         """
-        # Update position
+        # Update position based on velocity
         self.location += self.velocity
 
-        # Boundary handling - clip to bounds
+        # Boundary handling - stops particles going out of bounds
         self.location = np.clip(self.location, bounds[0], bounds[1])
 
         # If particle hits boundary, reflect velocity
@@ -60,6 +62,6 @@ class Particle:
         if fitness > self.best_fitness:
             self.best_fitness = fitness
             self.best_location = self.location.copy()
-            self.stagnant_counter = 0
+            self.not_moved_counter = 0
         else:
-            self.stagnant_counter += 1
+            self.not_moved_counter += 1
