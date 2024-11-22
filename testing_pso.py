@@ -19,8 +19,8 @@ def fitness_function(params):
 def test_iterations(epochs, iterations, problem_space: ProblemSpace, bounds):
     X_train, y_train, X_test, y_test = get_preprocessed_data()
 
-    average_test_mae = 0
-    average_train_mae = 0
+    test_maes = []
+    train_maes = []
 
     for i in range(iterations):
         iteration_ps: ProblemSpace = problem_space.copy()
@@ -34,13 +34,15 @@ def test_iterations(epochs, iterations, problem_space: ProblemSpace, bounds):
             y_test=y_test,
         )
 
-        average_test_mae += iteration_ps.best_test_mae
-        average_train_mae += iteration_ps.best_training_mae
+        test_maes.append(iteration_ps.best_test_mae)
+        train_maes.append(iteration_ps.best_training_mae)
         
-    average_test_mae /= iterations
-    average_train_mae /= iterations
+    average_test_mae = np.mean(test_maes)
+    average_train_mae = np.mean(train_maes)
+    std_test_mae = np.std(test_maes)
+    std_train_mae = np.std(train_maes)
 
-    return (average_train_mae, average_test_mae)
+    return (average_train_mae, average_test_mae, std_train_mae, std_test_mae)
 
 if __name__ == "__main__":
     # Load preprocessed data
@@ -67,6 +69,6 @@ if __name__ == "__main__":
         fitness_function=fitness_function,
     )
 
-    ret = test_iterations(10000, 10, pso, bounds)
+    ret = test_iterations(100, 10, pso, bounds)
 
     print(ret)

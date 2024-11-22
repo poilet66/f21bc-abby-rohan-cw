@@ -48,20 +48,20 @@ class Particle:
         # Boundary handling - stops particles going out of bounds
         self.location = np.clip(self.location, bounds[0], bounds[1])
 
-        # If particle hits boundary, reflect velocity
+        # If particle hits boundary, bounce back slower
         hit_min = self.location <= bounds[0]
         hit_max = self.location >= bounds[1]
-        self.velocity[hit_min | hit_max] *= -0.5  # Reflect with damping
+        self.velocity[hit_min | hit_max] *= -0.5  # bounce back at half speed
 
-    def evaluate_fitness(self, fitness_function: callable):
+    def evaluate_fitness(self, fitness_function):
         """
         Evaluate fitness with stagnation detection.
         """
         fitness = fitness_function(self.location)
 
         if fitness > self.best_fitness:
-            self.best_fitness = fitness
-            self.best_location = self.location.copy()
-            self.not_moved_counter = 0
+            self.best_fitness = fitness # updates best fitness
+            self.best_location = self.location.copy() # remember best
+            self.not_moved_counter = 0 # reset no movement counter
         else:
-            self.not_moved_counter += 1
+            self.not_moved_counter += 1 
