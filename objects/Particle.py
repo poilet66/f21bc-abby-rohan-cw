@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Particle:
-    def __init__(self, num_dimensions: int, bounds: tuple):
+    def __init__(self, num_dimensions, bounds):
         """
         Initialise a particle with random position and velocity.
         """
@@ -16,7 +16,7 @@ class Particle:
         self.best_fitness = float("-inf")
         self.not_moved_counter = 0  # Track iterations without improvement
 
-    def update_velocity(self, global_best, w, c1, c2, bounds, epoch, total_epochs):
+    def update_velocity(self, global_best, current_direction_weight, particle_best_weight, global_best_weight, bounds, epoch, total_epochs):
         """
         Update velocity with random movement if stuck
         """
@@ -26,11 +26,11 @@ class Particle:
             self.velocity += movement
             self.not_moved_counter = 0
 
-        cognitive = c1 * np.random.random() * (self.best_location - self.location) #pulls towards particle's best location
-        social = c2 * np.random.random() * (global_best - self.location) # pull towards global best location
+        cognitive = particle_best_weight * np.random.random() * (self.best_location - self.location) #pulls towards particle's best location
+        social = global_best_weight * np.random.random() * (global_best - self.location) # pull towards global best location
 
         # decrease momentum over time
-        momentum = w * (1 - epoch / total_epochs) * self.velocity
+        momentum = current_direction_weight * (1 - epoch / total_epochs) * self.velocity
 
         self.velocity = momentum + cognitive + social #mix movements together 
 
@@ -38,7 +38,7 @@ class Particle:
         max_velocity = (bounds[1] - bounds[0]) * np.exp(-2 * epoch / total_epochs)
         self.velocity = np.clip(self.velocity, -max_velocity, max_velocity)
 
-    def update_location(self, bounds: tuple):
+    def update_location(self, bounds):
         """
         Update the particle's location and handle boundary violations.
         """

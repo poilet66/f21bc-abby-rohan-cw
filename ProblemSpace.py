@@ -11,9 +11,9 @@ class ProblemSpace:
         num_dimensions: int,
         bounds: tuple,
         fitness_function: callable,
-        w: float = 0.729,
-        c1: float = 1.49445,
-        c2: float = 1.49445,
+        current_direction_weight: float = 1, # how much current direction impacts it
+        particle_best_weight: float = 1.5, # how much particle's best influences it
+        global_best_weight: float = 1.5, # how much global best impacts it
     ):
         self.ann = ann
         self.fitness_function = fitness_function
@@ -21,14 +21,14 @@ class ProblemSpace:
         self.global_best_fitness = float("-inf")
         self.best_training_mae = float("inf")
         self.best_test_mae = float("inf")
-        self.stagnation_count = 0
+        self.no_movement_count = 0
         self.best_fitness_history = []
 
-        self.w = w
-        self.c1 = c1
-        self.c2 = c2
+        self.current_direction_weight = current_direction_weight 
+        self.particle_best_weight = particle_best_weight 
+        self.global_best_weight = global_best_weight
 
-        # Create particles with improved exploration
+        # Create particles
         self.particles = [
             Particle(num_dimensions, bounds) for _ in range(num_particles)
         ]
@@ -48,31 +48,32 @@ class ProblemSpace:
             if particle.best_fitness > self.global_best_fitness:
                 self.global_best_fitness = particle.best_fitness
                 self.global_best_location = particle.best_location.copy()
-                self.stagnation_count = 0
+                self.no_movement_count = 0 #reset stuck counter
             else:
-                self.stagnation_count += 1
+                self.no_movement_count += 1
 
     def optimise(self, epochs: int, bounds: tuple, X_train, y_train, X_test, y_test):
         """
         Optimised PSO with improved exploration and stagnation handling.
         """
-        epochs_without_improvement = 0
+        epochs_without_improvement = 0 # tracks epochs with no movment
         best_solution = None
 
         for epoch in range(epochs):
             # Adaptive parameters based on progress
             progress = epoch / epochs
-            self.w = 0.729 * (1 - 0.5 * progress)
-            self.c1 = 1.49445 * (
+            self.current_direction_weight = 1 * (1 - 0.5 * progress) # current direction impact lessens over time
+            self.particle_best_weight = 1.5 * ( 
                 1 - 0.3 * progress
-            )  # Reduce cognitive component over time
-            self.c2 = 1.49445 * (
+            )  # particle's memory impacts less over time
+            self.global_best_weight = 1.5 * (
                 1 + 0.3 * progress
-            )  # Increase social component over time
+            )  # global best impact increases over time
 
             # Track changes
             max_position_change = 0
             max_velocity_change = 0
+
 
             for particle in self.particles:
                 previous_location = particle.location.copy()
@@ -80,21 +81,23 @@ class ProblemSpace:
 
                 particle.update_velocity(
                     global_best=self.global_best_location,
-                    w=self.w,
-                    c1=self.c1,
-                    c2=self.c2,
+                    current_direction_weight=self.current_direction_weight,
+                    particle_best_weight=self.particle_best_weight,
+                    global_best_weight=self.global_best_weight,
                     bounds=bounds,
                     epoch=epoch,
                     total_epochs=epochs,
                 )
 
-                particle.update_location(bounds)
-                particle.evaluate_fitness(self.fitness_function)
+                particle.update_location(bounds) #move to new location
+                particle.evaluate_fitness(self.fitness_function) #check fitness of new location
 
+                #track biggest moves made
                 max_position_change = max(
                     max_position_change,
                     np.max(np.abs(particle.location - previous_location)),
                 )
+                #track biggest velocity change
                 max_velocity_change = max(
                     max_velocity_change,
                     np.max(np.abs(particle.velocity - previous_velocity)),
@@ -114,7 +117,7 @@ class ProblemSpace:
             y_test_pred = self.ann.forward_pass(X_test)
             test_mae = np.mean(np.abs(y_test - y_test_pred.flatten()))
 
-            # Early stopping with patience
+            # Early stopping
             if test_mae < self.best_test_mae:
                 self.best_test_mae = test_mae
                 best_solution = self.global_best_location.copy()
@@ -142,7 +145,7 @@ class ProblemSpace:
                         )
                 epochs_without_improvement = 0
 
-            # Stop if truly converged
+            # Stops when no improvement happens for 50 epochs
             if epochs_without_improvement >= 50:
                 print(f"Early stopping at epoch {epoch + 1} due to no improvement")
                 break
@@ -150,7 +153,7 @@ class ProblemSpace:
             print(
                 f"Epoch {epoch + 1}/{epochs}, Training MAE: {train_mae:.4f}, "
                 f"Test MAE: {test_mae:.4f}, Best Test MAE: {self.best_test_mae:.4f}, "
-                f"Learning Rate: {self.w:.4f}"
+                f"Learning Rate: {self.current_direction_weight:.4f}"
             )
 
         # Restore best solution found
