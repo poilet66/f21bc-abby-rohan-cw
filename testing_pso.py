@@ -50,15 +50,13 @@ if __name__ == "__main__":
 
     # build our ann !
     ann = ANN(input_size=X_train.shape[1])
-    ann.add_hidden_layer(size=8, activation_function=logistic_regression)
-    ann.add_hidden_layer(size=8, activation_function=hyperbolic_tangent)
-    ann.add_hidden_layer(size=4, activation_function=ReLU)
-    ann.add_hidden_layer(size=2, activation_function=ReLU)
+    ann.add_hidden_layer(size=10, activation_function=logistic_regression)
+    ann.add_hidden_layer(size=10, activation_function=hyperbolic_tangent)
     ann.add_hidden_layer(size=1, activation_function=ReLU)  # Linear output
 
     # define pso hyperparameters!
     bounds = (-5, 5)
-    num_particles = 50
+    num_particles = 25
 
     # Create ProblemSpace with more particles
     pso = ProblemSpace(
@@ -69,6 +67,6 @@ if __name__ == "__main__":
         fitness_function=fitness_function,
     )
 
-    ret = test_iterations(100, 10, pso, bounds)
+    ret = test_iterations(1000, 10, pso, bounds)
 
     print(ret)
